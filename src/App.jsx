@@ -14,8 +14,8 @@ const App = () => {
   const [filteredSongs, setFilteredSongs] = useState([]);
   const [currentTab, setCurrentTab] = useState('forYou');
   const [searchQuery, setSearchQuery] = useState('');
-
-  const [isMobile, setIsMobile] = useState(false)
+  const [isMobile, setIsMobile] = useState(false);
+  const [searchTriggered, setSearchTriggered] = useState(false);
 
   const handleResize = () => {
     if (window.innerWidth < 720) {
@@ -61,7 +61,7 @@ const App = () => {
           song.artist.toLowerCase().includes(searchQuery.toLowerCase())
         );
       }
- 
+
       setFilteredSongs(filtered);
     };
 
@@ -69,6 +69,7 @@ const App = () => {
   }, [currentTab, songs, searchQuery]);
 
   const handleSearch = (query) => {
+    setSearchTriggered(true);
     if (query === "") {
       const filtered = songs.filter(song => song.top_track === (currentTab === 'topTracks'));
       setFilteredSongs(filtered);
@@ -76,7 +77,6 @@ const App = () => {
       setSearchQuery(query);
     }
   };
-
 
   const handlePlayPause = () => {
     setIsPlaying(!isPlaying);
@@ -86,7 +86,6 @@ const App = () => {
     setCurrentSong(song);
     setIsPlaying(true);
   };
-
 
   const handleNext = () => {
     const currentIndex = songs.findIndex(song => song.id === currentSong.id);
@@ -102,23 +101,25 @@ const App = () => {
 
   const backgroundStyle = currentSong
     ? {
-      background: `linear-gradient(108.18deg, ${currentSong.accent} 2.46%, #000000 99.84%)`,
-    }
+        background: `linear-gradient(108.18deg, ${currentSong.accent} 2.46%, #000000 99.84%)`,
+      }
     : {
-      background: 'linear-gradient(0deg, #000000, #000000)',
-    };
+        background: 'linear-gradient(0deg, #000000, #000000)',
+      };
 
   return (
     <div className="app" style={backgroundStyle}>
-
       <Header />
-
       <div className='center-div section-padding'>
         <TabSwitcher currentTab={currentTab} onTabChange={setCurrentTab} />
         <SearchBar onSearch={handleSearch} />
-        <SongList songs={filteredSongs} onSelectSong={handleSelectSong} currentSong={currentSong} />
+        <SongList 
+          songs={filteredSongs} 
+          onSelectSong={handleSelectSong} 
+          currentSong={currentSong}
+          searchTriggered={searchTriggered}
+        />
       </div>
-
       <div className='player-container' >
         {currentSong && (
           <Player
@@ -126,7 +127,7 @@ const App = () => {
             onPlayPause={handlePlayPause}
             onNext={handleNext}
             onPrevious={handlePrevious}
-            isPlaying={isPlaying} 
+            isPlaying={isPlaying}
           />
         )}
       </div>
