@@ -1,0 +1,23 @@
+.search-bar {
+    position: relative;
+    color: #fff;
+    padding: 0 16px;
+
+}
+
+.search-bar input {
+    padding: 8px 16px 8px 16px;
+    width: 100%;
+    border-radius: 8px;
+    opacity: 0px;
+    color: #fff;
+    background: #FFFFFF14;
+    margin-bottom: 10px;
+}
+
+.search-bar .search-icon {
+    position: absolute;
+    right: 32px;
+    cursor: pointer;
+    top: 10px;
+}
