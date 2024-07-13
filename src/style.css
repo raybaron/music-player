@@ -18,6 +18,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.004);
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  background: #000000;
 }
 
 a {
@@ -167,7 +168,7 @@ img {
 
 .app {
   min-height: 100vh;
-  background: #222222;
+  background: #1b1b1b;
   color: #fff;
 }
  
