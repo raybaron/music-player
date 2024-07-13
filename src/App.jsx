@@ -47,13 +47,13 @@ const App = () => {
       gsap.to('.app', {
         background: `linear-gradient(108.18deg, ${currentSong.accent} 2.46%, #000000 99.84%)`,
         duration: 1,
-        ease: 'sine.inOut',
+        ease: 'power1.inOut',
       });
     } else {
       gsap.to('.app', {
         background: 'linear-gradient(0deg, #000000, #000000)',
         duration: 1,
-        ease: 'sine.inOut',
+        ease: 'power1.inOut',
       });
     }
   }, [currentSong]);
