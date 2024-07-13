@@ -15,7 +15,7 @@ const Player = ({ onPlayPause, onNext, onPrevious }) => {
   const [showVolumeControl, setShowVolumeControl] = useState(false); 
 
   const handleResize = () => {
-    setIsMobile(window.innerWidth < 767);
+    setIsMobile(window.innerWidth <= 768);
   };
 
   useEffect(() => {

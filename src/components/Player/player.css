@@ -297,7 +297,7 @@
     }
 }
 
-@media (max-width:767px) {
+@media (max-width:768px) {
     .player-container {
         height: auto;
         width: 100%;
