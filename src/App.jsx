@@ -6,6 +6,7 @@ import SongList from './components/SongList/';
 import SearchBar from './components/SearchBar/';
 import TabSwitcher from './components/TabSwitcher/';
 import { useCurrentSong } from './contexts/currentSongContext';
+import { gsap } from 'gsap';
 import './style.css';
 
 const App = () => {
@@ -19,15 +20,16 @@ const App = () => {
 
   const handleResize = () => {
     if (window.innerWidth < 720) {
-      setIsMobile(true)
+      setIsMobile(true);
     } else {
-      setIsMobile(false)
+      setIsMobile(false);
     }
-  }
+  };
 
   useEffect(() => {
-    window.addEventListener("resize", handleResize)
-  })
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const fetchAndSetSongs = async () => {
@@ -42,8 +44,17 @@ const App = () => {
   useEffect(() => {
     if (currentSong) {
       document.querySelector('.app').classList.add('transition');
+      gsap.to('.app', {
+        background: `linear-gradient(108.18deg, ${currentSong.accent} 2.46%, #000000 99.84%)`,
+        duration: 1,
+        ease: 'power1.inOut',
+      });
     } else {
-      document.querySelector('.app').classList.remove('transition');
+      gsap.to('.app', {
+        background: 'linear-gradient(0deg, #000000, #000000)',
+        duration: 1,
+        ease: 'power1.inOut',
+      });
     }
   }, [currentSong]);
 
@@ -70,7 +81,7 @@ const App = () => {
 
   const handleSearch = (query) => {
     setSearchTriggered(true);
-    if (query === "") {
+    if (query === '') {
       const filtered = songs.filter(song => song.top_track === (currentTab === 'topTracks'));
       setFilteredSongs(filtered);
     } else {
@@ -99,28 +110,20 @@ const App = () => {
     setCurrentSong(songs[previousIndex]);
   };
 
-  const backgroundStyle = currentSong
-    ? {
-        background: `linear-gradient(108.18deg, ${currentSong.accent} 2.46%, #000000 99.84%)`,
-      }
-    : {
-        background: 'linear-gradient(0deg, #000000, #000000)',
-      };
-
   return (
-    <div className="app" style={backgroundStyle}>
+    <div className="app">
       <Header />
-      <div className='center-div section-padding'>
+      <div className="center-div section-padding">
         <TabSwitcher currentTab={currentTab} onTabChange={setCurrentTab} />
         <SearchBar onSearch={handleSearch} />
-        <SongList 
-          songs={filteredSongs} 
-          onSelectSong={handleSelectSong} 
+        <SongList
+          songs={filteredSongs}
+          onSelectSong={handleSelectSong}
           currentSong={currentSong}
           searchTriggered={searchTriggered}
         />
       </div>
-      <div className='player-container' >
+      <div className="player-container">
         {currentSong && (
           <Player
             currentSong={currentSong}
