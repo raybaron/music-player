@@ -110,6 +110,7 @@ const Player = ({ onPlayPause, onNext, onPrevious }) => {
           </div>
           <audio
             ref={audioRef}
+            key={currentSong.id} 
             src={currentSong.url}
             onTimeUpdate={handleTimeUpdate}
             onLoadedMetadata={() => setDuration(audioRef.current.duration)}
