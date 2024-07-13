@@ -11,6 +11,8 @@ const Player = ({ onPlayPause, onNext, onPrevious }) => {
   const [seekPercentage, setSeekPercentage] = useState(0);
   const [playerExpanded, setPlayerExpanded] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [volume, setVolume] = useState(1);
+  const [showVolumeControl, setShowVolumeControl] = useState(false); 
 
   const handleResize = () => {
     setIsMobile(window.innerWidth < 767);
@@ -23,6 +25,12 @@ const Player = ({ onPlayPause, onNext, onPrevious }) => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume; 
+    }
+  }, [volume,currentSong]);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -76,6 +84,15 @@ const Player = ({ onPlayPause, onNext, onPrevious }) => {
     setPlayerExpanded(false);
   };
 
+  const handleVolumeChange = (event) => {
+    const newVolume = event.target.value / 100;
+    setVolume(newVolume);
+  };
+
+  const toggleVolumeControl = () => {
+    setShowVolumeControl(!showVolumeControl);
+  };
+
   useEffect(() => {
     if (isMobile && currentSong) {
       gsap.to('.player', {
@@ -94,7 +111,7 @@ const Player = ({ onPlayPause, onNext, onPrevious }) => {
 
   return (
     <>
-      <div className={`player ${playerExpanded ? 'expanded' : ''}`} style={isMobile ? { background: 'transparent' } : {}}>
+      <div className={`player ${playerExpanded ? 'expanded' : ''}`} style={!isMobile ? { background: 'transparent' } : {}}>
         {playerExpanded && (
           <div className="collapse-button" onClick={handleCollapseClick}>
             <img src="/assets/down-arrow.png" alt="Collapse" width="24px" height="24px" className='cursor-pointer' />
@@ -113,7 +130,11 @@ const Player = ({ onPlayPause, onNext, onPrevious }) => {
             key={currentSong.id} 
             src={currentSong.url}
             onTimeUpdate={handleTimeUpdate}
-            onLoadedMetadata={() => setDuration(audioRef.current.duration)}
+            onLoadedMetadata={() => {
+              setDuration(audioRef.current.duration);
+              audioRef.current.volume = volume; 
+            }}
+          
             onError={() => console.error('Error loading audio source')}
           ></audio>
         </div>
@@ -147,7 +168,20 @@ const Player = ({ onPlayPause, onNext, onPrevious }) => {
               <div><img onClick={onNext} src='/assets/next.png' width={"24px"} height={"16px"} className='controls__icon' /></div>
             </div>
             <div className='sound'>
-              <img width={"48px"} height={"48px"} src='/assets/sound.png' />
+              <img width={"48px"} height={"48px"} src='/assets/sound.png' onClick={toggleVolumeControl} className='sound-icon' />
+              {showVolumeControl && (
+                <div className='seek-bar'>
+                  <input
+                    type="range"
+                    className="volume-seeker"
+                    min="0"
+                    max="100"
+                    value={volume * 100}
+                    onChange={handleVolumeChange}
+                    style={{ backgroundSize: `${volume * 100}% 100%` }}
+                  />
+                </div>
+              )}
             </div>
           </div>
         </div>

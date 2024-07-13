@@ -43,7 +43,7 @@ const App = () => {
 
   useEffect(() => {
     if (currentSong) {
-      document.querySelector('.app').classList.add('transition');
+      // document.querySelector('.app').classList.add('transition');
       gsap.to('.app', {
         background: `linear-gradient(108.18deg, ${currentSong.accent} 2.46%, #000000 99.84%)`,
         duration: 1,
