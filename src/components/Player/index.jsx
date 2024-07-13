@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useCurrentSong } from '../../contexts/currentSongContext';
+import { gsap } from 'gsap';
 import './player.css';
 
 const Player = ({ onPlayPause, onNext, onPrevious }) => {
@@ -16,7 +17,7 @@ const Player = ({ onPlayPause, onNext, onPrevious }) => {
   };
 
   useEffect(() => {
-    handleResize(); 
+    handleResize();
     window.addEventListener('resize', handleResize);
     return () => {
       window.removeEventListener('resize', handleResize);
@@ -67,14 +68,6 @@ const Player = ({ onPlayPause, onNext, onPrevious }) => {
     return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
   };
 
-  const backgroundStyle = currentSong
-    ? {
-      background: `linear-gradient(108.18deg, ${currentSong.accent} 2.46%, #000000 99.84%)`,
-    }
-    : {
-      background: 'linear-gradient(0deg, #000000, #000000)',
-    };
-
   const handleFloatingPlayerClick = () => {
     setPlayerExpanded(true);
   };
@@ -83,9 +76,25 @@ const Player = ({ onPlayPause, onNext, onPrevious }) => {
     setPlayerExpanded(false);
   };
 
+  useEffect(() => {
+    if (isMobile && currentSong) {
+      gsap.to('.player', {
+        background: `linear-gradient(108.18deg, ${currentSong.accent} 2.46%, #000000 99.84%)`,
+        duration: 1,
+        ease: 'power1.inOut',
+      });
+    } else if (isMobile) {
+      gsap.to('.player', {
+        background: 'linear-gradient(0deg, #000000, #000000)',
+        duration: 1,
+        ease: 'power1.inOut',
+      });
+    }
+  }, [isMobile, currentSong]);
+
   return (
     <>
-      <div className={`player ${playerExpanded ? 'expanded' : ''}`} style={isMobile ? backgroundStyle : {}}>
+      <div className={`player ${playerExpanded ? 'expanded' : ''}`} style={isMobile ? { background: 'transparent' } : {}}>
         {playerExpanded && (
           <div className="collapse-button" onClick={handleCollapseClick}>
             <img src="/assets/down-arrow.png" alt="Collapse" width="24px" height="24px" className='cursor-pointer' />
